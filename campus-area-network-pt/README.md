@@ -10,12 +10,35 @@ This project demonstrates the complete design and implementation of a Campus Are
 |------------------------|--------------------------------------------------------|
 | Tool Used              | Cisco Packet Tracer                                    |
 | Architecture           | 3-tier (Core, Distribution, Access)                    |
-| VLAN Segmentation      | For separate departments (Admin, HR, IT, etc.)         |
+| VLAN Segmentation      | Separate VLANs for Management, LAN, WLAN               |
 | Inter-VLAN Routing     | Done via Layer 3 Switch                                |
 | DHCP                   | Centralized DHCP setup for multiple VLANs              |
 | ACLs                   | Standard & Extended ACLs for filtering                 |
 | Firewall               | Cisco ASA simulation for edge protection               |
 | NAT & VPN              | PAT and Site-to-Site VPN implementation (optional)     |
+
+---
+
+## 🧩 VLAN Configuration and IP Addressing
+
+### 📍 Main Campus
+__________________________________________________________________________________
+| VLAN | Name        | Purpose                       | IP Subnet                  |
+|------|-------------|-------------------------------|----------------------------|
+| 10   | Management  | Network devices, admin access | 192.168.10.0/24            |
+| 20   | LAN         | Wired workstation users       | 172.16.0.0/16              |
+| 50   | WLAN        | Wireless users                | 10.10.0.0/16               |
+-----------------------------------------------------------------------------------
+
+
+### 🏢 Branch Office
+___________________________________________________________________________________
+| VLAN | Name        | Purpose                       | IP Subnet                   |
+|------|-------------|--------------------|----------------------------------------|
+| 60   | LAN         | Branch wired users          | 172.17.0.0/16                 |
+| 90   | WLAN        | Branch wireless users       | 10.11.0.0/16                  |
+------------------------------------------------------------------------------------
+> **Note:** The branch office does not use a management VLAN.
 
 ---
 
@@ -61,5 +84,5 @@ This project demonstrates the complete design and implementation of a Campus Are
 ## 📬 Contact
 
 **Gohar Nawaz**  
-📧 your-email@example.com  
-🔗 [LinkedIn](https://linkedin.com/in/your-link)
+📧 goharbhatti46@gmail.com  
+🔗 [LinkedIn](https://linkedin.com/in/gohar-nawaz-bhatti/)
