@@ -180,7 +180,7 @@ A **site-to-site IPsec VPN** is configured between the ASA firewalls of the main
 
 ## 🧰 Technologies Used
 
-* **Routing:** Static routing for edge networks, Inter-VLAN Routing on L3 switches
+* **Routing:** OSPF for dynamic routing between devices, Static routing for edge networks, Inter-VLAN Routing on L3 switches
 * **Switching:** VLANs, trunking, LACP EtherChannel
 * **Security:**
 
