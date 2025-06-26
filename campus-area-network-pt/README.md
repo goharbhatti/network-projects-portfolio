@@ -9,7 +9,7 @@
 
 ## 📘 Overview
 
-This project demonstrates the complete design and implementation of a Campus Area Network (CAN) connecting a main campus and a branch site, based on a hierarchical enterprise network architecture. It includes VLAN segmentation, inter-VLAN routing, DHCP, NAT, ACLs, a DMZ with critical servers, ASA firewall configuration, EtherChannel for link redundancy, wireless integration via a Cisco WLC, and a site-to-site IPsec VPN between the main and branch firewalls.
+This project demonstrates the complete design and implementation of a Campus Area Network (CAN) connecting a main campus and a branch site, based on a hierarchical enterprise network architecture. It includes VLAN segmentation, inter-VLAN routing, DHCP, NAT, ACLs, a DMZ with critical servers, ASA firewall configuration, EtherChannel for link redundancy, wireless integration via a Cisco WLC, guest and staff SSIDs on LAPs, and a site-to-site IPsec VPN between the main and branch firewalls.
 
 ---
 
@@ -32,7 +32,7 @@ This project demonstrates the complete design and implementation of a Campus Are
   * 1 Tablet
   * 1 Smartphone
   * 1 Printer
-  * 1 Lightweight Access Point (LAP)
+  * 1 Lightweight Access Point (LAP) configured with **Guest** and **Staff** SSIDs
 
 ### 🏢 Branch Area
 
@@ -64,6 +64,22 @@ This project demonstrates the complete design and implementation of a Campus Are
 | ---- | ---- | ------------------ | ------------- |
 | 60   | LAN  | Wired LAN users    | 172.17.0.0/16 |
 | 90   | WLAN | Wireless LAN users | 10.11.0.0/16  |
+
+---
+
+### 📊 User Capacity Estimates
+
+#### Main Area
+
+* **LAN Users (VLAN 20 / 172.16.0.0/16):** \~65,534 hosts
+* **WLAN Users (VLAN 50 / 10.10.0.0/16):** \~65,534 hosts
+
+#### Branch Area
+
+* **LAN Users (VLAN 60 / 172.17.0.0/16):** \~65,534 hosts
+* **WLAN Users (VLAN 90 / 10.11.0.0/16):** \~65,534 hosts
+
+> These capacities are theoretical and reflect addressable hosts based on subnet size, not real-world usage limits.
 
 ---
 
@@ -173,7 +189,7 @@ A **site-to-site IPsec VPN** is configured between the ASA firewalls of the main
   * ACLs (not yet documented here)
   * IPsec VPN between main and branch firewalls
 * **Services:** DHCP, DNS, Web, Email, FTP
-* **Wireless:** Lightweight APs and WLC configuration
+* **Wireless:** Lightweight APs with Guest and Staff SSIDs, and WLC configuration
 
 ---
 
