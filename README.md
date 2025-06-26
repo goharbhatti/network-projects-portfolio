@@ -1,37 +1,40 @@
 # Networking Projects Portfolio
 
-This repository contains a collection of networking projects I’ve completed after obtaining my CCNA certification. These labs demonstrate real-world networking scenarios and cover routing, switching, NAT, ACLs, VPNs, DHCP, and basic network automation using tools like Cisco Packet Tracer, GNS3, and Python.
+This repository contains my completed networking project after obtaining the CCNA certification. It demonstrates a real-world Campus Area Network (CAN) design and implementation using Cisco Packet Tracer, featuring hierarchical architecture, VLAN segmentation, inter-VLAN routing, DHCP, ACLs, NAT, and ASA firewall security.
+
+---
 
 ## 🔧 Tools Used
+
 - Cisco Packet Tracer
-- GNS3
-- Wireshark
-- Putty
 - Cisco CLI
-- Python (Netmiko, Paramiko)
+
+---
 
 ## 📁 Projects Overview
-
-| Project Name               | Description                                                   |
-|---------------------------|---------------------------------------------------------------|
-| Static Routing Lab         | RIP, EIGRP, OSPF single and multi-area configuration examples |
-| VLAN & Trunking Lab        | VLANs, VTP, inter-VLAN routing with routers and L3 switches   |
-| ACL Lab                    | Standard and extended ACLs with practical filtering scenarios |
-| NAT Lab                    | Static, dynamic NAT and PAT setups                           |
-| Site-to-Site VPN Lab       | IPsec VPN configuration between two routers                  |
-| DHCP Lab                   | Centralized and distributed DHCP setups                      |
-| Network Automation Lab     | Automating device configuration backups using Python & Netmiko |
+_________________________________________________________________________________________________________________________________________
+| Project Name                  | Description                                                                                            |
+|-------------------------------|--------------------------------------------------------------------------------------------------------|
+| Campus Area Network (CAN) Lab | Complete 3-tier campus network design and implementation with VLANs, DHCP, NAT, ACLs, and ASA firewall |
+-----------------------------------------------------------------------------------------------------------------------------------------
+---
 
 ## 📦 Folder Structure
+network-projects-portfolio/
+└── campus-area-network-pt/
+├── CAN_project.pkt
+├── README.md
+├── CAN_Topology.png
+└── config.txt
 
-Each folder contains:
-- `.pkt` or `.gns3project` file
-- `README.md` explaining the lab
-- `config.txt` or CLI command reference (if applicable)
-- Screenshots or diagrams (optional)
+
+Each folder contains the Packet Tracer project file, network topology screenshot, CLI configurations, and documentation.
+
+---
 
 ## 📬 Contact
 
 **Gohar Nawaz**  
-📧 Email: goharbhatti46@gmail.com  
-🔗 [LinkedIn](https://linkedin.com/in/gohar-nawaz-bhatti)  
+📧 goharbhatti46@gmail.com  
+🔗 [LinkedIn](https://linkedin.com/in/gohar-nawaz-bhatti)
+
