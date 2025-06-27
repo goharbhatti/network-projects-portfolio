@@ -1,8 +1,11 @@
 # Campus Area Network Design & Implementation
 
 **Version:** 1.2
+
 **Author:** Gohar Nawaz
+
 **Tool Used:** Cisco Packet Tracer
+
 **Last Updated:** June 2025
 
 ---
