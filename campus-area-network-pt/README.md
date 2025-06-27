@@ -1,6 +1,6 @@
 # Campus Area Network Design & Implementation
 
-**Version:** 1.0
+**Version:** 1.2
 **Author:** Gohar Nawaz
 **Tool Used:** Cisco Packet Tracer
 **Last Updated:** June 2025
@@ -9,7 +9,19 @@
 
 ## 📘 Overview
 
-This project demonstrates the complete design and implementation of a Campus Area Network (CAN) connecting a main campus and a branch site, based on a hierarchical enterprise network architecture. It includes VLAN segmentation, inter-VLAN routing, DHCP, NAT, ACLs, a DMZ with critical servers, ASA firewall configuration, EtherChannel for link redundancy, wireless integration via a Cisco WLC, guest and staff SSIDs on LAPs, and a site-to-site IPsec VPN between the main and branch firewalls.
+This project delivers an enterprise-grade Campus Area Network (CAN) solution interconnecting a main and branch campus with high availability, scalability, and security. Built in Cisco Packet Tracer, it includes:
+
+* VLAN segmentation
+* OSPF routing
+* HSRP redundancy
+* DHCP services
+* Access Control Lists
+* ASA firewall security
+* DMZ hosting core services
+* Wireless LAN with Guest/Staff SSIDs
+* Site-to-site IPsec VPN
+* LACP-based EtherChannel links
+* Password encryption across devices
 
 ---
 
@@ -17,38 +29,27 @@ This project demonstrates the complete design and implementation of a Campus Are
 
 ### 📍 Main Area
 
-* **Faculties:**
+**Faculties:** Health Sciences, Business, Engineering, Art and Design
+**Department:** IT (with 2 extra management PCs)
 
-  * Health Sciences
-  * Business
-  * Engineering
-  * Art and Design
-* **Departments:**
+**Devices per Faculty/Department:**
 
-  * IT Department (with 2 additional PCs for management)
-* **Devices per Faculty/Department:**
-
-  * 2 PCs
-  * 1 Tablet
-  * 1 Smartphone
-  * 1 Printer
-  * 1 Lightweight Access Point (LAP) configured with **Guest** and **Staff** SSIDs
+* 2 PCs
+* 1 Tablet
+* 1 Smartphone
+* 1 Printer
+* 1 Lightweight Access Point (LAP) with Guest & Staff SSIDs
 
 ### 🏢 Branch Area
 
-* **Faculties:**
-
-  * Health Sciences
-  * Business
-  * Engineering
-  * Art and Design
-* **Devices per Faculty:** Same as main area (except no IT department)
+**Faculties:** Health Sciences, Business, Engineering, Art and Design
+**Devices per Faculty:** Same as above (no IT dept)
 
 ---
 
 ## 🧩 Network Design
 
-### 🧱 VLAN Configuration and Subnetting
+### 🧱 VLAN Configuration & Subnetting
 
 #### Main Area
 
@@ -69,17 +70,17 @@ This project demonstrates the complete design and implementation of a Campus Are
 
 ### 📊 User Capacity Estimates
 
-#### Main Area
+**Main Area:**
 
-* **LAN Users (VLAN 20 / 172.16.0.0/16):** \~65,534 hosts
-* **WLAN Users (VLAN 50 / 10.10.0.0/16):** \~65,534 hosts
+* LAN: \~65,534 users (VLAN 20)
+* WLAN: \~65,534 users (VLAN 50)
 
-#### Branch Area
+**Branch Area:**
 
-* **LAN Users (VLAN 60 / 172.17.0.0/16):** \~65,534 hosts
-* **WLAN Users (VLAN 90 / 10.11.0.0/16):** \~65,534 hosts
+* LAN: \~65,534 users (VLAN 60)
+* WLAN: \~65,534 users (VLAN 90)
 
-> These capacities are theoretical and reflect addressable hosts based on subnet size, not real-world usage limits.
+> Capacity is theoretical, based on subnetting.
 
 ---
 
@@ -87,109 +88,80 @@ This project demonstrates the complete design and implementation of a Campus Are
 
 #### Main Area
 
-* **Access Layer:** One switch per faculty and department
-* **Distribution Layer:** Two multilayer Layer 3 switches
+* **Access Layer:** One switch per department
+* **Distribution Layer:** Two L3 switches with HSRP:
 
-  * Connected to each access switch for redundancy
-  * Connected to each other using 3 links with **LACP EtherChannel**
-* **Core Layer:** Cisco ASA Firewall
+  * VLAN 10 → 192.168.10.3 (L3-1), .2 (L3-2), VIP: .1
+  * VLAN 20 → 172.16.0.3 / .2, VIP: .1
+  * VLAN 50 → 10.10.0.3 / .2, VIP: .1
+* **Core Layer:** Cisco ASA
+* **Redundancy:** LACP EtherChannel (3 links)
 
-#### Wireless Integration
+#### Wireless
 
 * **WLC IP:** 10.10.0.15/16
-* **Gateway:** 10.10.0.1
-* **WLC connected to L3 Switch 1** (10.20.20.33/30 ↔ Firewall 10.20.20.34/30)
+* **Gateway:** 10.10.0.1 (HSRP VIP)
 
-#### ASA Firewall Internal Interfaces
+#### ASA (Main)
 
-* **Inside 1 (to L3 Switch 1):** 10.20.20.34/30
-* **Inside 2 (to L3 Switch 2):** 10.20.20.38/30
+* Inside 1: 10.20.20.34/30 ↔ L3-1 (.33)
+* Inside 2: 10.20.20.38/30 ↔ L3-2 (.37)
+* DMZ: 10.20.20.1/27
 
-#### DMZ Zone (via ASA)
+  * DHCP1: .5, DHCP2: .6, DNS: .7, Web: .8, Email: .9, FTP: .10
+* Outside: 105.100.50.2/30 ↔ ISP (.1) ↔ Internet: 20.20.20.1
 
-* **DMZ IP Subnet:** 10.20.20.0/27
-* **Firewall DMZ Interface IP:** 10.20.20.1
-* **DMZ Devices:**
+#### Branch Network
 
-  * DHCP Server 1: 10.20.20.5
-  * DHCP Server 2: 10.20.20.6
-  * DNS Server: 10.20.20.7
-  * Web Server: 10.20.20.8
-  * Email Server: 10.20.20.9
-  * FTP Server: 10.20.20.10
-
-#### Internet Connectivity
-
-* **Firewall Outside IP:** 105.100.50.2/30 ↔ ISP: 105.100.50.1
-* **ISP to Internet:** ISP: 20.20.20.2 ↔ Internet Gateway: 20.20.20.1
+* L3-1: VLAN 60 → 172.17.0.3, VLAN 90 → 10.11.0.3
+* L3-2: VLAN 60 → .2, VLAN 90 → .2
+* HSRP VIPs: .1 for both VLANs
+* Firewall Inside 1: 10.20.20.41 ↔ L3-1 (.42)
+* Firewall Inside 2: 10.20.20.45 ↔ L3-2 (.46)
+* Outside: 205.200.100.2 ↔ Branch ISP (.1) ↔ Internet: 30.30.30.1
+* EtherChannel between L3s: 3 links (LACP)
 
 ---
 
-### 🏢 Branch Network
+## 🔐 Security & Services
 
-#### Firewall and Layer 3 Switches
-
-* **Branch Firewall IPs:**
-
-  * Inside 1: 10.20.20.41 ↔ L3 Switch 1: 10.20.20.42/30
-  * Inside 2: 10.20.20.45 ↔ L3 Switch 2: 10.20.20.46/30
-* **L3 Switches Interconnect:** 3 links via **LACP EtherChannel**
-
-#### Internet Connectivity for Branch
-
-* **Firewall Outside IP:** 205.200.100.2/30 ↔ ISP: 205.200.100.1
-* **ISP to Internet:** ISP: 30.30.30.2 ↔ Internet Gateway: 30.30.30.1
-
----
-
-## 🔐 Site-to-Site VPN
-
-A **site-to-site IPsec VPN** is configured between the ASA firewalls of the main and branch networks to securely tunnel traffic between both sites over the internet. This ensures encrypted communication for sensitive data across both campuses.
+* **Routing:** OSPF between all L3 devices
+* **HSRP:** Redundant gateway IPs for end devices
+* **Firewall:** Cisco ASA on edge with encrypted access
+* **DMZ:** Servers segmented from internal LAN
+* **VPN:** IPsec tunnel between Main & Branch ASA firewalls
+* **Wireless:** Dual SSIDs (Staff, Guest) per LAP via WLC
+* **Access Control:** Device passwords and encryption enabled
 
 ---
 
 ## 🧾 Interface & IP Address Table
 
-| Device               | Interface | IP Address    | Subnet Mask     | Description            |
-| -------------------- | --------- | ------------- | --------------- | ---------------------- |
-| ASA Main             | Inside 1  | 10.20.20.34   | 255.255.255.252 | To L3 Switch 1         |
-| ASA Main             | Inside 2  | 10.20.20.38   | 255.255.255.252 | To L3 Switch 2         |
-| ASA Main             | DMZ       | 10.20.20.1    | 255.255.255.224 | DMZ interface          |
-| ASA Main             | Outside   | 105.100.50.2  | 255.255.255.252 | To Main ISP            |
-| L3 Switch 1 (Main)   | Uplink    | 10.20.20.33   | 255.255.255.252 | To ASA Inside 1        |
-| L3 Switch 2 (Main)   | Uplink    | 10.20.20.37   | 255.255.255.252 | To ASA Inside 2        |
-| WLC (Main)           | Mgmt      | 10.10.0.15    | 255.255.0.0     | WLAN controller        |
-| DHCP Server 1        | NIC       | 10.20.20.5    | 255.255.255.224 | Primary DHCP server    |
-| DHCP Server 2        | NIC       | 10.20.20.6    | 255.255.255.224 | Backup DHCP server     |
-| DNS Server           | NIC       | 10.20.20.7    | 255.255.255.224 | DNS service            |
-| Web Server           | NIC       | 10.20.20.8    | 255.255.255.224 | Web hosting            |
-| Email Server         | NIC       | 10.20.20.9    | 255.255.255.224 | Email server           |
-| FTP Server           | NIC       | 10.20.20.10   | 255.255.255.224 | File Transfer Protocol |
-| ISP Main             | Inside    | 105.100.50.1  | 255.255.255.252 | To ASA Outside         |
-| ISP Main             | Outside   | 20.20.20.2    | 255.255.255.252 | To Internet            |
-| Internet             | Gateway   | 20.20.20.1    | 255.255.255.252 | Core internet          |
-| ISP Branch           | Inside    | 30.30.30.1    | 255.255.255.252 | To Internet            |
-| ISP Branch           | Outside   | 205.200.100.1 | 255.255.255.252 | To Branch ASA Outside  |
-| ASA Branch           | Outside   | 205.200.100.2 | 255.255.255.252 | To Branch ISP          |
-| ASA Branch           | Inside 1  | 10.20.20.41   | 255.255.255.252 | To Branch L3 Switch 1  |
-| ASA Branch           | Inside 2  | 10.20.20.45   | 255.255.255.252 | To Branch L3 Switch 2  |
-| L3 Switch 1 (Branch) | Uplink    | 10.20.20.42   | 255.255.255.252 | To Branch ASA Inside 1 |
-| L3 Switch 2 (Branch) | Uplink    | 10.20.20.46   | 255.255.255.252 | To Branch ASA Inside 2 |
-
----
-
-## 🧰 Technologies Used
-
-* **Routing:** OSPF for dynamic routing between devices, Static routing for edge networks, Inter-VLAN Routing on L3 switches
-* **Switching:** VLANs, trunking, LACP EtherChannel
-* **Security:**
-
-  * Cisco ASA firewall configuration
-  * DMZ segmentation
-  * ACLs (not yet documented here)
-  * IPsec VPN between main and branch firewalls
-* **Services:** DHCP, DNS, Web, Email, FTP
-* **Wireless:** Lightweight APs with Guest and Staff SSIDs, and WLC configuration
+| Device               | Interface | IP Address(s)                       | Subnet Mask        | Description           |
+| -------------------- | --------- | ----------------------------------- | ------------------ | --------------------- |
+| ASA Main             | Inside 1  | 10.20.20.34                         | 255.255.255.252    | To L3 Switch 1        |
+| ASA Main             | Inside 2  | 10.20.20.38                         | 255.255.255.252    | To L3 Switch 2        |
+| ASA Main             | DMZ       | 10.20.20.1                          | 255.255.255.224    | DMZ interface         |
+| ASA Main             | Outside   | 105.100.50.2                        | 255.255.255.252    | To Main ISP           |
+| L3 Switch 1 (Main)   | VLANs     | 192.168.10.3, 172.16.0.3, 10.10.0.3 | Respective Subnets | HSRP active           |
+| L3 Switch 2 (Main)   | VLANs     | 192.168.10.2, 172.16.0.2, 10.10.0.2 | Respective Subnets | HSRP standby          |
+| WLC                  | Mgmt      | 10.10.0.15                          | 255.255.0.0        | WLAN Controller       |
+| DHCP 1               | NIC       | 10.20.20.5                          | 255.255.255.224    | Primary DHCP          |
+| DHCP 2               | NIC       | 10.20.20.6                          | 255.255.255.224    | Backup DHCP           |
+| DNS                  | NIC       | 10.20.20.7                          | 255.255.255.224    | DNS                   |
+| Web Server           | NIC       | 10.20.20.8                          | 255.255.255.224    | Web Hosting           |
+| Email Server         | NIC       | 10.20.20.9                          | 255.255.255.224    | Email                 |
+| FTP Server           | NIC       | 10.20.20.10                         | 255.255.255.224    | FTP                   |
+| ISP Main             | Inside    | 105.100.50.1                        | 255.255.255.252    | To ASA Outside        |
+| ISP Main             | Outside   | 20.20.20.2                          | 255.255.255.252    | To Internet           |
+| Internet             | Gateway   | 20.20.20.1                          | 255.255.255.252    | Public IP             |
+| ISP Branch           | Inside    | 30.30.30.1                          | 255.255.255.252    | To Internet           |
+| ISP Branch           | Outside   | 205.200.100.1                       | 255.255.255.252    | To Branch ASA         |
+| ASA Branch           | Outside   | 205.200.100.2                       | 255.255.255.252    | To Branch ISP         |
+| ASA Branch           | Inside 1  | 10.20.20.41                         | 255.255.255.252    | To Branch L3 Switch 1 |
+| ASA Branch           | Inside 2  | 10.20.20.45                         | 255.255.255.252    | To Branch L3 Switch 2 |
+| L3 Switch 1 (Branch) | VLANs     | 172.17.0.3, 10.11.0.3               | Respective Subnets | HSRP active           |
+| L3 Switch 2 (Branch) | VLANs     | 172.17.0.2, 10.11.0.2               | Respective Subnets | HSRP standby          |
 
 ---
 
@@ -201,5 +173,5 @@ A **site-to-site IPsec VPN** is configured between the ASA firewalls of the main
 
 ---
 
-> **Version 1.0 – June 2025**
-> *This document is subject to updates as the project evolves or additional features are added (e.g., ACLs, VPN, automation).*
+> **Version 1.2 – Final Draft, June 2025**
+> *This documentation may be enhanced further as new services or technologies are implemented (e.g., automation scripts).*
